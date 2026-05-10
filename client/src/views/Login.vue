@@ -102,7 +102,7 @@ const handleLogin = async () => {
 
     loading.value = true
     try {
-      const { data: res } = await import('axios').then(m => m.default.post('/api/auth/login', loginForm))
+      const res = await api.login(loginForm)
 
       localStorage.setItem('token', res.token)
       localStorage.setItem('username', res.username)
