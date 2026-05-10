@@ -1,0 +1,27 @@
+{
+  "name": "mc-admin-server",
+  "version": "1.0.0",
+  "description": "Minecraft Server Management System",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server/index.js",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "postbuild": "node -e \"const fs = require('fs'); const path = require('path'); const src = path.join(__dirname, 'client/dist'); const dest = path.join(__dirname, 'public'); if(!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true }); fs.cpSync(src, dest, { recursive: true }); console.log('Frontend copied to public/');\"",
+    "start": "node server/index.js",
+    "deploy": "npm run build && echo 'Ready to deploy!'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "rcon-client": "^4.2.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
