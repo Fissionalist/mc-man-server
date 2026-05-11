@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const { RCON } = require('rcon-client');
+const Rcon = require('rcon');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -41,31 +41,67 @@ const JWT_SECRET = process.env.JWT_SECRET || 'mc-admin-secret-key-change-in-prod
 const PORT = process.env.PORT || 3000;
 
 let rcon = null;
+let rconConnected = false;
+let pendingCommands = [];
 
-async function connectRCON() {
-  try {
-    rcon = new RCON({ host: RCON_HOST, port: RCON_PORT, password: RCON_PASSWORD });
-    await rcon.connect();
-    console.log('RCON connected successfully');
-    return true;
-  } catch (error) {
-    console.error('RCON connection failed:', error.message);
-    return false;
+function connectRCON() {
+  if (rcon && rconConnected) {
+    return Promise.resolve(true);
   }
+
+  return new Promise((resolve, reject) => {
+    try {
+      rcon = new Rcon(RCON_HOST, RCON_PORT, RCON_PASSWORD, { tcp: true, challenge: false });
+
+      rcon.on('auth', function() {
+        console.log('RCON connected successfully');
+        rconConnected = true;
+        resolve(true);
+      });
+
+      rcon.on('response', function(str) {
+        if (pendingCommands.length > 0) {
+          const { resolve } = pendingCommands.shift();
+          resolve(str);
+        }
+      });
+
+      rcon.on('end', function() {
+        console.log('RCON connection closed');
+        rconConnected = false;
+      });
+
+      rcon.on('error', function(err) {
+        console.error('RCON error:', err);
+        rconConnected = false;
+        if (pendingCommands.length > 0) {
+          const { reject } = pendingCommands.shift();
+          reject(err);
+        }
+      });
+
+      rcon.connect();
+    } catch (error) {
+      console.error('RCON connection failed:', error.message);
+      resolve(false);
+    }
+  });
 }
 
 async function sendRconCommand(command) {
-  if (!rcon) {
+  if (!rcon || !rconConnected) {
     const connected = await connectRCON();
     if (!connected) throw new Error('RCON not connected');
   }
-  try {
-    const response = await rcon.execute(command);
-    return response;
-  } catch (error) {
-    console.error('RCON command failed:', error.message);
-    throw error;
-  }
+
+  return new Promise((resolve, reject) => {
+    try {
+      pendingCommands.push({ resolve, reject });
+      rcon.send(command);
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
 let adminUsers = [];
@@ -145,7 +181,7 @@ app.post('/api/auth/register', authenticateToken, async (req, res) => {
 
 app.get('/api/server/status', authenticateToken, async (req, res) => {
   try {
-    const connected = rcon ? true : await connectRCON();
+    const connected = rconConnected;
     res.json({ online: connected, host: RCON_HOST, port: RCON_PORT });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -413,8 +449,8 @@ io.on('connection', (socket) => {
 
   const statusInterval = setInterval(async () => {
     try {
-      if (rcon) {
-        const list = await sendRconCommand('list');
+      if (rconConnected) {
+        const list = await sendRconCommand('list').catch(() => 'No players');
         const tps = await sendRconCommand('tps').catch(() => 'N/A');
         socket.emit('serverStatus', { online: true, players: list, tps });
       } else {
