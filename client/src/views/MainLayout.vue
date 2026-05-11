@@ -32,7 +32,7 @@
         </router-link>
 
         <router-link to="/console" class="nav-item" active-class="active">
-          <el-icon><Terminal /></el-icon>
+          <el-icon><Command /></el-icon>
           <span>命令控制台</span>
         </router-link>
       </nav>
@@ -105,7 +105,7 @@ import {
   SwitchButton,
   Sun,
   Moon,
-  Terminal
+  Command
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
