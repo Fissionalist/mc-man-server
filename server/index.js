@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const RconClient = require('rcon-client');
+const { RCON } = require('rcon-client');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -44,7 +44,8 @@ let rcon = null;
 
 async function connectRCON() {
   try {
-    rcon = await RconClient.connect({ host: RCON_HOST, port: RCON_PORT, password: RCON_PASSWORD });
+    rcon = new RCON({ host: RCON_HOST, port: RCON_PORT, password: RCON_PASSWORD });
+    await rcon.connect();
     console.log('RCON connected successfully');
     return true;
   } catch (error) {
