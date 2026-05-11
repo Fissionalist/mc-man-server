@@ -1,13 +1,27 @@
 <template>
-  <div id="app" class="app-container">
+  <div id="app" :class="['app-container', { 'light-theme': isLightTheme }]">
     <router-view />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted, provide } from 'vue'
+
+const isLightTheme = ref(false)
+
+const toggleTheme = () => {
+  isLightTheme.value = !isLightTheme.value
+  localStorage.setItem('theme', isLightTheme.value ? 'light' : 'dark')
+}
+
+provide('toggleTheme', toggleTheme)
+provide('isLightTheme', isLightTheme)
 
 onMounted(() => {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'light') {
+    isLightTheme.value = true
+  }
   console.log('MC Admin loaded')
 })
 </script>
@@ -31,8 +45,13 @@ html, body {
 
 .app-container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  overflow: hidden;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+
+  &.light-theme {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
 }
 </style>

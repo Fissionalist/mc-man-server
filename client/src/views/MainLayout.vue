@@ -30,6 +30,11 @@
           <el-icon><Tools /></el-icon>
           <span>系统设置</span>
         </router-link>
+
+        <router-link to="/console" class="nav-item" active-class="active">
+          <el-icon><Terminal /></el-icon>
+          <span>命令控制台</span>
+        </router-link>
       </nav>
 
       <div class="sidebar-footer">
@@ -51,6 +56,15 @@
             <el-icon><UserFilled /></el-icon>
             <span>{{ username }}</span>
           </div>
+
+          <el-button 
+            type="primary" 
+            plain 
+            @click="toggleTheme"
+            :title="isLightTheme ? '切换到深色主题' : '切换到浅色主题'"
+          >
+            <el-icon><Sun v-if="isLightTheme" /><Moon v-else /></el-icon>
+          </el-button>
 
           <el-dropdown @command="handleCommand">
             <el-button type="primary" plain>
@@ -76,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
 import { io } from 'socket.io-client'
@@ -88,13 +102,18 @@ import {
   Tools,
   UserFilled,
   ArrowDown,
-  SwitchButton
+  SwitchButton,
+  Sun,
+  Moon,
+  Terminal
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const serverStatus = ref(null)
 const username = localStorage.getItem('username') || 'Admin'
+const toggleTheme = inject('toggleTheme')
+const isLightTheme = inject('isLightTheme')
 let socket = null
 
 const pageTitle = computed(() => {
@@ -103,7 +122,8 @@ const pageTitle = computed(() => {
     Players: '玩家管理',
     GameSettings: '游戏设置',
     WorldManagement: '世界管理',
-    SystemSettings: '系统设置'
+    SystemSettings: '系统设置',
+    CommandConsole: '命令控制台'
   }
   return titles[route.name] || '控制台'
 })

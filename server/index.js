@@ -444,6 +444,19 @@ app.get('/api/banlist/list', authenticateToken, async (req, res) => {
   }
 });
 
+app.post('/api/command/execute', authenticateToken, async (req, res) => {
+  const { command } = req.body;
+  if (!command) {
+    return res.status(400).json({ error: 'Command is required' });
+  }
+  try {
+    const result = await sendRconCommand(command);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 io.on('connection', (socket) => {
   console.log('Client connected');
 

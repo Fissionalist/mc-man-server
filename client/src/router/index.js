@@ -6,6 +6,7 @@ import Players from '../views/Players.vue'
 import GameSettings from '../views/GameSettings.vue'
 import WorldManagement from '../views/WorldManagement.vue'
 import SystemSettings from '../views/SystemSettings.vue'
+import CommandConsole from '../views/CommandConsole.vue'
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
         path: 'system',
         name: 'SystemSettings',
         component: SystemSettings
+      },
+      {
+        path: 'console',
+        name: 'CommandConsole',
+        component: CommandConsole
       }
     ]
   }

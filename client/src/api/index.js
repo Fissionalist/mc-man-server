@@ -63,5 +63,7 @@ export default {
   saveAll: () => api.post('/world/save-all'),
 
   getWhitelist: () => api.get('/whitelist/list'),
-  getBanlist: () => api.get('/banlist/list')
+  getBanlist: () => api.get('/banlist/list'),
+
+  sendCommand: (command) => api.post('/command/execute', { command })
 }
