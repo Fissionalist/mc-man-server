@@ -19,7 +19,7 @@
             <el-icon><Timer /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ tps || 'N/A' }}</div>
+            <div class="stat-value">{{ formatTps(tps) }}</div>
             <div class="stat-label">服务器TPS</div>
           </div>
         </div>
@@ -231,6 +231,12 @@ const refreshPlayers = async () => {
   } catch (error) {
     ElMessage.error('刷新失败: ' + error.message)
   }
+}
+
+const formatTps = (tpsValue) => {
+  if (!tpsValue || tpsValue === 'N/A') return 'N/A'
+  if (tpsValue.includes('Unknown command')) return '插件未安装'
+  return tpsValue
 }
 
 const refreshAll = async () => {

@@ -451,8 +451,7 @@ io.on('connection', (socket) => {
     try {
       if (rconConnected) {
         const list = await sendRconCommand('list').catch(() => 'No players');
-        const tps = await sendRconCommand('tps').catch(() => 'N/A');
-        socket.emit('serverStatus', { online: true, players: list, tps });
+        socket.emit('serverStatus', { online: true, players: list, tps: 'N/A' });
       } else {
         socket.emit('serverStatus', { online: false });
       }
