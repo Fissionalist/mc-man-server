@@ -63,7 +63,7 @@
             @click="toggleTheme"
             :title="isLightTheme ? '切换到深色主题' : '切换到浅色主题'"
           >
-            <el-icon><Sun v-if="isLightTheme" /><Moon v-else /></el-icon>
+            <el-icon><Setting v-if="isLightTheme" /><Grid v-else /></el-icon>
           </el-button>
 
           <el-dropdown @command="handleCommand">
@@ -102,9 +102,7 @@ import {
   Tools,
   UserFilled,
   ArrowDown,
-  SwitchButton,
-  Sun,
-  Moon
+  SwitchButton
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
