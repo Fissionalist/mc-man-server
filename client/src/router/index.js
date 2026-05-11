@@ -7,6 +7,7 @@ import GameSettings from '../views/GameSettings.vue'
 import WorldManagement from '../views/WorldManagement.vue'
 import SystemSettings from '../views/SystemSettings.vue'
 import CommandConsole from '../views/CommandConsole.vue'
+import Monitor from '../views/Monitor.vue'
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
         path: 'console',
         name: 'CommandConsole',
         component: CommandConsole
+      },
+      {
+        path: 'monitor',
+        name: 'Monitor',
+        component: Monitor
       }
     ]
   }

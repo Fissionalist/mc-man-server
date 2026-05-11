@@ -11,6 +11,11 @@
           <span>控制台</span>
         </router-link>
 
+        <router-link to="/monitor" class="nav-item" active-class="active">
+          <el-icon><Grid /></el-icon>
+          <span>监控中心</span>
+        </router-link>
+
         <router-link to="/players" class="nav-item" active-class="active">
           <el-icon><User /></el-icon>
           <span>玩家管理</span>
@@ -116,6 +121,7 @@ let socket = null
 const pageTitle = computed(() => {
   const titles = {
     Dashboard: '控制台',
+    Monitor: '监控中心',
     Players: '玩家管理',
     GameSettings: '游戏设置',
     WorldManagement: '世界管理',
