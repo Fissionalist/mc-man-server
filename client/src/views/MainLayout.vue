@@ -32,7 +32,7 @@
         </router-link>
 
         <router-link to="/console" class="nav-item" active-class="active">
-          <el-icon><Command /></el-icon>
+          <el-icon><Tools /></el-icon>
           <span>命令控制台</span>
         </router-link>
       </nav>
@@ -104,8 +104,7 @@ import {
   ArrowDown,
   SwitchButton,
   Sun,
-  Moon,
-  Command
+  Moon
 } from '@element-plus/icons-vue'
 
 const route = useRoute()

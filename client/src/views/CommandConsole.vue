@@ -5,7 +5,7 @@
         <div class="card-header">
           <span>⌘ 命令控制台</span>
           <el-button type="success" size="small" @click="clearOutput">
-            <el-icon><Trash2 /></el-icon>
+            <el-icon><Tools /></el-icon>
             清空
           </el-button>
         </div>
@@ -29,7 +29,7 @@
         >
           <template #append>
             <el-button type="primary" @click="executeCommand" :loading="loading">
-              <el-icon><Send /></el-icon>
+              <el-icon><ArrowDown /></el-icon>
               执行
             </el-button>
           </template>
@@ -56,7 +56,7 @@
 <script setup>
 import { ref, nextTick, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Send, Trash2 } from '@element-plus/icons-vue'
+import { ArrowDown, Tools } from '@element-plus/icons-vue'
 import api from '../api'
 
 const command = ref('')
